@@ -9,7 +9,7 @@ module.exports = {
     author: "Kshitiz/coffee",
     countDown: 5,
     role: 0,
-    shortDescription: "Join the group that bot is in",
+    shortDescription: "Join the group that the bot is in",
     longDescription: "",
     category: "owner",
     guide: {
@@ -20,9 +20,8 @@ module.exports = {
   onStart: async function ({ api, event }) {
     try {
       const groupList = await api.getThreadList(10, null, ['INBOX']);
-
       const filteredList = groupList.filter(group => group.threadName !== null);
-
+      
       // Sort filteredList based on the number of participants (from most to least)
       const sortedList = filteredList.sort((a, b) => b.participantIDs.length - a.participantIDs.length);
 
@@ -92,7 +91,16 @@ module.exports = {
       api.sendMessage(`You have joined the group chat: ${selectedGroup.threadName}`, event.threadID, event.messageID);
     } catch (error) {
       console.error("Error joining group chat", error);
-      api.sendMessage('An error occurred while joining the group chat.\nPlease try again later.', event.threadID, event.messageID);
+
+      let errorMessage = 'Failed to add you to the group because you have set your chat to private only.';
+      
+      // Additional checks for specific error cases (if needed)
+      if (error.response && error.response.error) {
+        // You can handle specific error cases here if the error object provides more details
+        errorMessage += `\nError: ${error.response.error}`;
+      }
+
+      api.sendMessage(errorMessage, event.threadID, event.messageID);
     } finally {
       global.GoatBot.onReply.delete(event.messageID);
     }
