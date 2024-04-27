@@ -4,6 +4,11 @@ const commandInfoMap = {
     description: "Ai Based on GPT-4",
     guide: "-ai what is life?"
     },
+  removebg: {
+    name: "removebg",
+    description: "remove background of an image",
+    guide: "reply to an image and type\n-removebg or -rbg"
+    },
   knight: {
     name: "knight",
     description: "a medieval knight that has been called upon as an ai you can talk to",
@@ -270,6 +275,7 @@ module.exports = {
 │ - Help
 │ - Join
 │ - Prefix
+│ - Removebg
 │ - Stat
 │ - Tempmail
 │ - Uid
