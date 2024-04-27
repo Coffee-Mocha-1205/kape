@@ -4,7 +4,7 @@ const axios = require("axios");
 const tinyurl = require('tinyurl');
 
 // Define your list of bad words
-const badWords = ["cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
+const badWords = ["cleavage","cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
 
 module.exports = {
   config: {
