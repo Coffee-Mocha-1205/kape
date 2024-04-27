@@ -90,9 +90,9 @@ adduser: {
     guide: "-tia do you have a boyfriend?"
   },
   dalle: {
-    name: "dalle",
-    description: "make image through text",
-    guide: "-dalle cat"
+    name: "animagine",
+    description: "make anime image through text",
+    guide: "-animagine cat"
   },
   image: {
     name: "image",
@@ -243,7 +243,7 @@ module.exports = {
 ╰─━━━━━━━━━╾─╯
 ╭─╼━━━━━━━━╾─╮
 │  🖼 | 𝙸𝚖𝚊𝚐𝚎
-│ - Dalle
+│ - Animagine
 │ - Image
 │ - Gmage
 │ - Gpt Draw
