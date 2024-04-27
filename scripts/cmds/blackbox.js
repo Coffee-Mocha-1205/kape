@@ -48,7 +48,7 @@ module.exports = {
 
     onChat: async ({ args, message, threadsData, event, isUserCallCommand, getLang }) => {
         const query = args.join(" ").toLowerCase();
-        if ((isUserCallCommand && args.length > 1) || (query !== "hello" && query !== "hi")) {
+        if ((isUserCallCommand && args.length > 1) || (query !== "blackbox" && query !== "box")) {
             return;
         }
 
