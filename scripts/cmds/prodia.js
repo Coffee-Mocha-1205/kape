@@ -1,116 +1,94 @@
-const axios = require('axios');
-const badWords = ["gay", "pussy", "dick","nude","sugar","fuck","fucked","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
+const tinyurl = require('tinyurl');
 
+// Define your list of bad words
+const badWords = ["tits", "gay", "pussy", "dick","nude","sugar","fuck","fucked","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
 
 module.exports = {
   config: {
-    name: 'prodia',
-    version: '1.0',
-    author: 'rehat--',
-    countDown: 0,
+    name: "prodia",
+    aliases: [],
+    version: "1.0",
+    author: "vex_Kshitiz",
+    countDown: 20,
     role: 0,
-    longDescription: {
-      en: 'Text to Image'
-    },
-    category: 'image',
+    shortDescription: "Image to image",
+    longDescription: "Image to image conversion",
+    category: "game",
     guide: {
-      en: '1 | 3Guofeng3_v34' +
-        '\n2 | absolutereality_V16' +
-        '\n3 | absolutereality_v181' +
-        '\n4 | amIReal_V41' +
-        '\n5 | analog-diffusion-1.0' +
-        '\n6 | anythingv3' +
-        '\n7 | anything-v4.5' +
-        '\n8 | anythingV5' +
-        '\n9 | AOM3A3_orangemixs' +
-        '\n10 | blazing_drive_v10' +
-        '\n11 | cetusMix_V35' +
-        '\n12 | childrensStories_v13' +
-        '\n13 | childrensStories_v1' +
-        '\n14 | childrensStories_v1ToonAnime' +
-        '\n15 | Counterfeit_v30' +
-        '\n16 | cuteyukimixAdorable_midchapter3' +
-        '\n17 | cyberrealistic_v33' +
-        '\n18 | dalcefo_v4' +
-        '\n19 | deliberate_v2' +
-        '\n20 | deliberate_v3' +
-        '\n21 | dreamlike-anime-1.0' +
-        '\n22 | dreamlike-diffusion-1.0' +
-        '\n23 | dreamlike-photoreal-2.0' +
-        '\n24 | dreamshaper_6' +
-        '\n25 | dreamshaper_7' +
-        '\n26 | dreamshaper_8' +
-        '\n27 | edgeOfRealism_eorV20' +
-        '\n28 | EimisAnimeDiffusion_V1' +
-        '\n29 | elldreths-vivid-mix' +
-        '\n30 | epicrealism_naturalSinRC1VAE' +
-        '\n31 | ICantBelieveItsNotPhotography_seco' +
-        '\n32 | juggernaut_aftermath' +
-        '\n33 | lofi_v4' +
-        '\n34 | lyriel_v16' +
-        '\n35 | majicmixRealistic_v4' +
-        '\n36 | mechamix_v10' +
-        '\n37 | meinamix_meinaV9' +
-        '\n38 | meinamix_meinaV11' +
-        '\n39 | neverendingDream_v122' +
-        '\n40 | openjourney_V4' +
-        '\n41 | pastelMixStylizeAnime' +
-        '\n42 | portraitplus_V1.0' +
-        '\n43 | protogenx34' +
-        '\n44 | Realistic_Vision_V1.4' +
-        '\n45 | Realistic_Vision_V2.0' +
-        '\n46 | Realistic_Vision_V4.0' +
-        '\n47 | Realistic_Vision_V5.0' +
-        '\n48 | redshift_diffusion-V10' +
-        '\n49 | revAnimated_v122' +
-        '\n50 | rundiffusionFX25D_v10' +
-        '\n51 | rundiffusionFX_v10' +
-        '\n52 | sdv1_4' +
-        '\n53 | v1-5-pruned-emaonly' +
-        '\n54 | shoninsBeautiful_v10' +
-        '\n55 | theallys-mix-ii-churned' +
-        '\n56 | timeless-1.0' +
-        '\n57 | toonyou_beta6'
+      en: "{p}prodia reply to image or {p}prodia [prompt]"
     }
   },
-
-  onStart: async function ({ message, args, event, api }) {
-    const permission = ["100005954550355"];
-    if (!permission.includes(event.senderID)) {
-      api.sendMessage(
-        `❌ | Command "prodia" currently unavailable buy premium to use the command.`,
-        event.threadID,
-        event.messageID
-      );
-      return;
-    }
+  onStart: async function ({ message, event, args, api }) {
+    api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
     try {
-      const info = args.join(' ');
-      const [prompt, model] = info.split('|').map(item => item.trim());
-      const text = args.join(" ");
-      if (!text) {
-        return message.reply("(⁠◍⁠•⁠ᴗ⁠•⁠◍⁠) | tell me what to draw..");
+      const promptApiUrl = "https://www.api.vyturex.com/describe?url=";
+      const sdxlApiUrl = "https://sdxl-kshitiz.onrender.com/gen";
+
+      let imageUrl = null;
+      let prompt = '';
+      let style = 2; // Set style to 2
+
+      // Function to check for bad words
+      function containsBadWords(text) {
+        const lowerText = text.toLowerCase();
+        return badWords.some(word => lowerText.includes(word));
       }
+
+      if (event.type === "message_reply") {
+        const attachment = event.messageReply.attachments[0];
+        if (!attachment || !["photo", "sticker"].includes(attachment.type)) {
+          return message.reply("❌ | Reply must be an image.");
+        }
+        imageUrl = attachment.url;
+        const promptResponse = await axios.get(promptApiUrl + encodeURIComponent(imageUrl));
+        prompt = promptResponse.data;
+      } else if (args.length > 0 && args[0].startsWith("http")) {
+        imageUrl = args[0];
+        const promptResponse = await axios.get(promptApiUrl + encodeURIComponent(imageUrl));
+        prompt = promptResponse.data;
+      } else if (args.length > 0) {
+        const argParts = args.join(" ").split("|");
+        prompt = argParts[0].trim();
+        if (argParts.length > 1) {
+          style = parseInt(argParts[1].trim());
+        }
+      } else {
+        return message.reply("❌");
+      }
+
+      // Check for bad words in the prompt
       if (containsBadWords(prompt)) {
-        return message.reply('(⁠‘⁠◉⁠⌓⁠◉⁠’⁠) | No Pervert Allowed.');
+        return message.reply("❌ | Your prompt contains inappropriate language.");
       }
-      const modelParam = model || '3';
-      const apiUrl = `https://turtle-apis.onrender.com/api/prodia?prompt=${prompt}&model=${modelParam}`;
 
-      await message.reply("(⁠◍⁠•⁠ᴗ⁠•⁠◍⁠) I'm currently working on it. Please be patient.");
-      const form = {};
-      form.attachment = [];
-      form.attachment[0] = await global.utils.getStreamFromURL(apiUrl);
+      const sdxlResponse = await axios.get(sdxlApiUrl, {
+        params: {
+          prompt: prompt,
+          style: style 
+        }
+      });
 
-      message.reply(form);
+      if (sdxlResponse.data.status === "success") {
+        const imageUrl = sdxlResponse.data.url;
+        const imagePath = path.join(__dirname, "cache", `${Date.now()}_generated_image.png`);
+        const imageResponse = await axios.get(imageUrl, { responseType: "stream" });
+        const imageStream = imageResponse.data.pipe(fs.createWriteStream(imagePath));
+        imageStream.on("finish", () => {
+          const stream = fs.createReadStream(imagePath);
+          message.reply({
+            body: "",
+            attachment: stream
+          });
+        });
+      } else {
+        throw new Error("Image generation failed");
+      }
     } catch (error) {
-      console.error(error);
-      await message.reply('(⁠･⁠–⁠･⁠) | Sorry, api dead...');
+      console.error("Error:", error);
+      message.reply("❌ | An error occurred. Please try again later.");
     }
   }
 };
-
-function containsBadWords(prompt) {
-  const promptLower = prompt.toLowerCase();
-  return badWords.some(badWord => promptLower.includes(badWord));
-}
