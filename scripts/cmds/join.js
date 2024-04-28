@@ -1,7 +1,3 @@
-const axios = require("axios");
-const fs = require("fs-extra");
-const request = require("request");
-
 module.exports = {
   config: {
     name: "join",
@@ -31,7 +27,11 @@ module.exports = {
         const formattedList = sortedList.map((group, index) =>
           `│${index + 1}. ${group.threadName}\n│𝐓𝐈𝐃: ${group.threadID}\n│𝐓𝐨𝐭𝐚𝐥 𝐦𝐞𝐦𝐛𝐞𝐫𝐬: ${group.participantIDs.length}\n│`
         );
-        const message = `╭─╮\n│𝐋𝐢𝐬𝐭 𝐨𝐟 𝐠𝐫𝐨𝐮𝐩 𝐜𝐡𝐚𝐭𝐬:\n${formattedList.map(line => `${line}`).join("\n")}\n╰───────────ꔪ\n𝐌𝐚𝐱𝐢𝐦𝐮𝐦 𝐌𝐞𝐦𝐛𝐞𝐫𝐬 = 250\n\nReply to this message with the number of the group you want to join (1, 2, 3, 4.)...`;
+
+        // Calculate total users across all groups
+        const totalUsers = sortedList.reduce((total, group) => total + group.participantIDs.length, 0);
+
+        const message = `𝐋𝐢𝐬𝐭 𝐨𝐟 𝐠𝐫𝐨𝐮𝐩 𝐜𝐡𝐚𝐭𝐬:\n╭─╮\n${formattedList.join("\n")}\n╰───────────ꔪ\n𝐌𝐚𝐱𝐢𝐦𝐮𝐦 𝐌𝐞𝐦𝐛𝐞𝐫𝐬 = 250\n𝐎𝐯𝐞𝐫𝐚𝐥𝐥 𝐔𝐬𝐞𝐫𝐬 = ${totalUsers}\n\nReply to this message with the number of the group you want to join (1, 2, 3, 4...)`;
 
         const sentMessage = await api.sendMessage(message, event.threadID);
         global.GoatBot.onReply.set(sentMessage.messageID, {
