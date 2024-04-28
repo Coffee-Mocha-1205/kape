@@ -128,7 +128,7 @@ async function translateAndSendMessage(content, langCodeTrans, message, getLang)
     try {
         const { text, lang } = await translate(content.trim(), langCodeTrans.trim());
 
-        const header = `━━━━━━━━━━━━━━━━\n${text}\n\nTranslated from ${lang} to ${langCodeTrans}\n━━━━━━━━━━━━━━━━`;
+        const header = `━━━━━━━━━━━━━━━━\n▫️$ {text}\n\n🪧 Translated from ${lang} to ${langCodeTrans}\n━━━━━━━━━━━━━━━━`;
 
         await message.reply(header);
     } catch (error) {
