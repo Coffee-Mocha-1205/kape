@@ -128,7 +128,7 @@ async function translateAndSendMessage(content, langCodeTrans, message, getLang)
     try {
         const { text, lang } = await translate(content.trim(), langCodeTrans.trim());
 
-        const header = `🧋✨ | 𝙼𝚘𝚌𝚑𝚊 𝙰𝚒\n━━━━━━━━━━━━━━━━\n${text}\n🌐 Translate from ${lang} to ${langCodeTrans}
+        const header = `━━━━━━━━━━━━━━━━\n${text}\n🌐 Translate from ${lang} to ${langCodeTrans}
 \n━━━━━━━━━━━━━━━━`;
 
         await message.reply(header);
