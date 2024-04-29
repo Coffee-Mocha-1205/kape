@@ -53,6 +53,7 @@ async function fetchFromAI(url, params) {
 async function getAIResponse(input, userId, messageID) {
   const query = input.trim() || "hi";
   const services = [
+    { url: 'https://gpt-four.vercel.app/gpt', params: { prompt: query, uid: userId } }, // New AI service (moved to the first position)
     { url: 'https://sandipapi.onrender.com/gpt', params: { prompt: query } },
     { url: 'https://ai-tools.replit.app/gpt', params: { prompt: query, uid: userId } },
     { url: 'https://openaikey-x20f.onrender.com/api', params: { prompt: query } },
@@ -100,5 +101,6 @@ module.exports = {
 
       message.reply(`🧋✨ | 𝙼𝚘𝚌𝚑𝚊 𝙰𝚒\n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`, messageID);
     }
-  }
+  },
+  handleCommand // Export the handleCommand function for command-based interactions
 };
