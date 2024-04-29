@@ -287,6 +287,7 @@ module.exports = {
 │ - Ban
 │ - Cmd
 │ - Delete
+│ - Filteruser
 │ - Kick
 │ - Leave
 │ - Restart 
