@@ -33,10 +33,10 @@ module.exports = {
                 en: {
                         needAdmin: "⚠️ | Please add the bot as a group admin to use this command",
                         confirm: "⚠️ | Are you sure you want to delete group members with less than %1 messages?\nReact to this message to confirm",
-                        kickByBlock: "✅ | Successfully removed %1 members unavailable account",
+                        kickByBlock: "✅ | Successfully removed %1 members (dead accounts)",
                         kickByMsg: "✅ | Successfully removed %1 members with less than %2 messages",
                         kickError: "❌ | An error occurred and could not kick %1 members:\n%2",
-                        noBlock: "✅ | There are no members who are locked acc",
+                        noBlock: "✅ | There are no members who are dead account",
                         noMsg: "✅ | There are no members with less than %1 messages"
                 }
         },
