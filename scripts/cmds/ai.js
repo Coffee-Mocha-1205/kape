@@ -53,16 +53,9 @@ async function fetchFromAI(url, params) {
 async function getAIResponse(input, userId, messageID) {
   const query = input.trim() || "hi";
   const services = [
-    { url: 'https://sandipapi.onrender.com/gpt', params: { prompt: query } },
     { url: 'https://ai-tools.replit.app/gpt', params: { prompt: query, uid: userId } },
     { url: 'https://openaikey-x20f.onrender.com/api', params: { prompt: query } },
-    { url: 'http://fi3.bot-hosting.net:20265/api/gpt', params: { question: query } },
-    { url: 'https://ai-chat-gpt-4-lite.onrender.com/api/hercai', params: { question: query } },
-    { url: 'https://personal-ai-phi.vercel.app/kshitiz', params: { prompt: query } },
-    { url: 'https://lianeapi.onrender.com/@hercai/api/Herc.ai?key=j86bwkwo-8hako-12C', params: { query: query } },
-    { url: 'https://ai-technology.onrender.com/api/chatgpt', params: { prompt: query } },
-    { url: 'https://gpt-four.vercel.app/gpt', params: { prompt: query, uid: userId } } // New AI service
-    // Add more AI services here...
+    { url: 'https://sandipapi.onrender.com/gpt', params: { prompt: query } }
   ];
 
   let response = "Error: No response from AI services.";
