@@ -55,6 +55,7 @@ async function getAIResponse(input, userId, messageID) {
     { url: 'https://ai-tools.replit.app/gpt', params: { prompt: query, uid: userId } },
     { url: 'https://openaikey-x20f.onrender.com/api', params: { prompt: query } },
     { url: 'https://gpt-four.vercel.app/gpt', params: { prompt: query, uid: query } },
+    { url: 'https://ai-chat-gpt-4-lite.onrender.com/api/hercai', params: { question: query } },
     { url: 'https://sandipapi.onrender.com/gpt', params: { prompt: query } }
   ];
 
