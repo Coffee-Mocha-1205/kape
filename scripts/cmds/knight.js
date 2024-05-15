@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const apiEndpoint = 'https://lianeapi.onrender.com/@unregistered/api/0.4598389569511292?key=j86bwkwo-8hako-12C';
+const apiEndpoint = 'https://liaspark.chatbotcommunity.ltd/@unregistered/api/0.4598389569511292?key=j86bwkwo-8hako-12C';
 
 module.exports = {
   config: {
