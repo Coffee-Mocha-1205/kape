@@ -1,6 +1,6 @@
 const axios = require('axios');
 const PREFIXES = ["-claire"];
-const API_ENDPOINT = 'https://lianeapi.onrender.com/ask/claire';
+const API_ENDPOINT = 'https://liaspark.chatbotcommunity.ltd/ask/claire';
 
 const askClaire = async (api, event, message) => {
     try {
