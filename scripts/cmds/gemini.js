@@ -1,216 +1,155 @@
-const axios = require('axios');
-const fs = require('fs-extra');
-const path = require('path');
-const ytdl = require("@neoxr/ytdl-core");
-const yts = require("yt-search");
-
-async function lado(api, event, args, message) {
-  try {
-    const songName = args.join(" ");
-    const searchResults = await yts(songName);
-
-    if (!searchResults.videos.length) {
-      message.reply("No song found for the given query.");
-      return;
-    }
-
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
-    const stream = ytdl(videoUrl, { filter: "audioonly" });
-    const fileName = `music.mp3`; 
-    const filePath = path.join(__dirname, "tmp", fileName);
-
-    stream.pipe(fs.createWriteStream(filePath));
-
-    stream.on('response', () => {
-      console.info('[DOWNLOADER]', 'Starting download now!');
-    });
-
-    stream.on('info', (info) => {
-      console.info('[DOWNLOADER]', `Downloading ${info.videoDetails.title} by ${info.videoDetails.author.name}`);
-    });
-
-    stream.on('end', () => {
-      const audioStream = fs.createReadStream(filePath);
-      message.reply({ attachment: audioStream });
-      api.setMessageReaction("✅", event.messageID, () => {}, true);
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    message.reply("Sorry, an error occurred while processing your request.");
-  }
-}
-
-async function kshitiz(api, event, args, message) {
-  try {
-    const query = args.join(" ");
-    const searchResults = await yts(query);
-
-    if (!searchResults.videos.length) {
-      message.reply("No videos found for the given query.");
-      return;
-    }
-
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
-    const stream = ytdl(videoUrl, { filter: "audioandvideo" }); 
-    const fileName = `music.mp4`;
-    const filePath = path.join(__dirname, "tmp", fileName);
-
-    stream.pipe(fs.createWriteStream(filePath));
-
-    stream.on('response', () => {
-      console.info('[DOWNLOADER]', 'Starting download now!');
-    });
-
-    stream.on('info', (info) => {
-      console.info('[DOWNLOADER]', `Downloading ${info.videoDetails.title} by ${info.videoDetails.author.name}`);
-    });
-
-    stream.on('end', () => {
-      const videoStream = fs.createReadStream(filePath);
-      message.reply({ attachment: videoStream });
-      api.setMessageReaction("✅", event.messageID, () => {}, true);
-    });
-  } catch (error) {
-    console.error(error);
-    message.reply("Sorry, an error occurred while processing your request.");
-  }
-}
-
-async function b(c, d, e, f) {
-  try {
-    const g = await axios.get(`https://gemini-ai-pearl-two.vercel.app/kshitiz?prompt=${encodeURIComponent(c)}&uid=${d}&apikey=kshitiz`);
-    const answer = g.data.answer;
-    return `👩‍💻 | 𝙶𝚎𝚖𝚒𝚗𝚒 |\n━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━`;
-  } catch (h) {
-    throw h;
-  }
-}
-
-async function i(c) {
-  try {
-    const j = await axios.get(`https://sdxl-kshitiz.onrender.com/gen?prompt=${encodeURIComponent(c)}&style=3`);
-    const answer = j.data.url;
-    return `━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━`;
-  } catch (k) {
-    throw k;
-  }
-}
-
-async function describeImage(prompt, photoUrl) {
-  try {
-    const url = `https://sandipbaruwal.onrender.com/gemini2?prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(photoUrl)}`;
-    const response = await axios.get(url);
-    return response.data.answer;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function l({ api, message, event, args }) {
-  try {
-    const m = event.senderID;
-    let n = "";
-    let draw = false;
-    let sendTikTok = false;
-    let sing = false;
-
-    if (args[0].toLowerCase() === "draw") {
-      draw = true;
-      n = args.slice(1).join(" ").trim();
-    } else if (args[0].toLowerCase() === "send") {
-      sendTikTok = true;
-      n = args.slice(1).join(" ").trim();
-    } else if (args[0].toLowerCase() === "sing") {
-      sing = true;
-      n = args.slice(1).join(" ").trim();
-    } else if (event.messageReply && event.messageReply.attachments && event.messageReply.attachments.length > 0) {
-      const photoUrl = event.messageReply.attachments[0].url;
-      n = args.join(" ").trim();
-      const description = await describeImage(n, photoUrl);
-      message.reply(`Description: ${description}`);
-      return;
-    } else {
-      n = args.join(" ").trim();
-    }
-
-    if (!n) {
-      return message.reply("Please provide a prompt.");
-    }
-
-    if (draw) {
-      await drawImage(message, n);
-    } else if (sendTikTok) {
-      await kshitiz(api, event, args.slice(1), message); 
-    } else if (sing) {
-      await lado(api, event, args.slice(1), message); 
-    } else {
-      const q = await b(n, m);
-      message.reply(q, (r, s) => {
-        global.GoatBot.onReply.set(s.messageID, {
-          commandName: a.name,
-          uid: m 
-        });
-      });
-    }
-  } catch (t) {
-    console.error("Error:", t.message);
-    message.reply("An error occurred while processing the request.");
-  }
-}
-
-async function drawImage(message, prompt) {
-  try {
-    const u = await i(prompt);
-
-    const v = path.join(__dirname, 'cache', `image_${Date.now()}.png`);
-    const writer = fs.createWriteStream(v);
-
-    const response = await axios({
-      url: u,
-      method: 'GET',
-      responseType: 'stream'
-    });
-
-    response.data.pipe(writer);
-
-    return new Promise((resolve, reject) => {
-      writer.on('finish', resolve);
-      writer.on('error', reject);
-    }).then(() => {
-      message.reply({
-        body: "Generated image:",
-        attachment: fs.createReadStream(v)
-      });
-    });
-  } catch (w) {
-    console.error("Error:", w.message);
-    message.reply("An error occurred while processing the request.");
-  }
-}
-
-const a = {
-  name: "gemini",
-  aliases: ["gem"],
-  version: "4.0",
-  author: "vex_kshitiz",
-  countDown: 5,
-  role: 0,
-  longDescription: "Chat with gemini",
-  category: "ai",
-  guide: {
-    en: "{p}gemini {prompt}"
-  }
-};
+const axios = require("axios");
+const fs = require("fs");
+const cookie = 'g.a000jAgkbuC3Z3pwjOu4YulB7kwqlmePsX2TCiqf68yHVd_PFrwT1JPNVjFsZInzfeSKnB99wwACgYKAVkSAQASFQHGX2Mi8IyCIo3a3I3NeBq9M5MxwhoVAUF8yKoNuSl2K2-sLRtC4vn2mpBr0076';
 
 module.exports = {
-  config: a,
-  handleCommand: l,
-  onStart: function ({ api, message, event, args }) {
-    return l({ api, message, event, args });
+  config: {
+    name: "gemini",
+    version: "1.0",
+    author: "rehat--",
+    countDown: 5,
+    role: 0,
+    longDescription: { en: "Artificial Intelligence Google Gemini" },
+    guide: { en: "{pn} <query>" },
+    category: "ai",
   },
-  onReply: function ({ api, message, event, args }) {
-    return l({ api, message, event, args });
-  }
+  clearHistory: function () {
+    global.GoatBot.onReply.clear();
+  },
+
+  onStart: async function ({ message, event, args, commandName }) {
+    const uid = event.senderID;
+    const prompt = args.join(" ");
+
+    if (!prompt) {
+      message.reply("Please enter a query.");
+      return;
+    }
+
+    if (prompt.toLowerCase() === "clear") {
+      this.clearHistory();
+      const clear = await axios.get(`https://rehatdesu.xyz/api/llm/gemini?query=clear&uid=${uid}&cookie=${cookie}`);
+      message.reply(formatMessage(clear.data.message));
+      return;
+    }
+
+    let apiUrl = `https://rehatdesu.xyz/api/llm/gemini?query=${encodeURIComponent(prompt)}&uid=${uid}&cookie=${cookie}`;
+
+    if (event.type === "message_reply") {
+      const imageUrl = event.messageReply.attachments[0]?.url;
+      if (imageUrl) {
+        apiUrl += `&attachment=${encodeURIComponent(imageUrl)}`;
+      }
+    }
+
+    try {
+      const response = await axios.get(apiUrl);
+      const result = response.data;
+
+      let content = result.message;
+      let imageUrls = result.imageUrls;
+
+      let replyOptions = {
+        body: formatMessage(content), // Apply header and footer to content
+      };
+
+      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
+        const imageStreams = [];
+
+        if (!fs.existsSync(`${__dirname}/cache`)) {
+          fs.mkdirSync(`${__dirname}/cache`);
+        }
+
+        for (let i = 0; i < imageUrls.length; i++) {
+          const imageUrl = imageUrls[i];
+          const imagePath = `${__dirname}/cache/image` + (i + 1) + ".png";
+
+          try {
+            const imageResponse = await axios.get(imageUrl, {
+              responseType: "arraybuffer",
+            });
+            fs.writeFileSync(imagePath, imageResponse.data);
+            imageStreams.push(fs.createReadStream(imagePath));
+          } catch (error) {
+            console.error("Error occurred while downloading and saving the image:", error);
+            message.reply(formatMessage('An error occurred.'));
+          }
+        }
+
+        replyOptions.attachment = imageStreams;
+      }
+
+      message.reply(replyOptions, (err, info) => {
+        if (!err) {
+          global.GoatBot.onReply.set(info.messageID, {
+            commandName,
+            messageID: info.messageID,
+            author: event.senderID,
+          });
+        }
+      });
+    } catch (error) {
+      message.reply(formatMessage('An error occurred.'));
+      console.error(error.message);
+    }
+  },
+
+  onReply: async function ({ message, event, Reply, args }) {
+    const prompt = args.join(" ");
+    let { author, commandName, messageID } = Reply;
+    if (event.senderID !== author) return;
+
+    try {
+      const apiUrl = `https://rehatdesu.xyz/api/llm/gemini?query=${encodeURIComponent(prompt)}&uid=${author}&cookie=${cookie}`;
+      const response = await axios.get(apiUrl);
+
+      let content = response.data.message;
+      let replyOptions = {
+        body: formatMessage(content), // Apply header and footer to content
+      };
+
+      const imageUrls = response.data.imageUrls;
+      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
+        const imageStreams = [];
+
+        if (!fs.existsSync(`${__dirname}/cache`)) {
+          fs.mkdirSync(`${__dirname}/cache`);
+        }
+        for (let i = 0; i < imageUrls.length; i++) {
+          const imageUrl = imageUrls[i];
+          const imagePath = `${__dirname}/cache/image` + (i + 1) + ".png";
+
+          try {
+            const imageResponse = await axios.get(imageUrl, {
+              responseType: "arraybuffer",
+            });
+            fs.writeFileSync(imagePath, imageResponse.data);
+            imageStreams.push(fs.createReadStream(imagePath));
+          } catch (error) {
+            console.error("Error occurred while downloading and saving the image:", error);
+            message.reply(formatMessage('An error occurred.'));
+          }
+        }
+        replyOptions.attachment = imageStreams;
+      }
+      message.reply(replyOptions, (err, info) => {
+        if (!err) {
+          global.GoatBot.onReply.set(info.messageID, {
+            commandName,
+            messageID: info.messageID,
+            author: event.senderID,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error.message);
+      message.reply(formatMessage("An error occurred."));
+    }
+  },
 };
+
+function formatMessage(content) {
+  const header = "👩‍💻 | 𝙶𝚎𝚖𝚒𝚗𝚒 |\n━━━━━━━━━━━━━━━━\n";
+  const footer = "\n━━━━━━━━━━━━━━━━";
+  return header + content + footer;
+}
