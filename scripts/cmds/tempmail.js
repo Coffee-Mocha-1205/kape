@@ -1,90 +1,60 @@
-const axios = require('axios');
+const axios = require("axios");
+const fs = require("fs-extra");
+const path = require("path");
 
 module.exports = {
   config: {
     name: "tempmail",
-    version: "2.0",
+    aliases: [`tm`],
+    version: "1.0.0",
+    author: "Upol | ArYAN",
     role: 0,
-    countdown: 5,
-    author: "Rehat86 | @Turtle APIs",
-    longDescription: "Create temporary email and check inbox messages",
-    category: "members",
+    countDown: 5,
+    longDescription: {
+      en: "Generate temporary email and check inbox"
+    },
+    category: "email",
+    guide: {
+      en: ".tempmail < subcommand >\n\nFor Example:\n.tempmail create\n.tempmail inbox <tempmail>"
+    }
   },
-
-  onStart: async ({ api, event, args }) => {
+  onStart: async function ({ api, event, args }) {
     try {
-      if (!args[0]) {
-        return api.sendMessage("(⁠｡⁠•̀⁠ᴗ⁠-⁠)⁠✧ Please follow these format:\n-tempmail create\n-tempmail inbox <email>", event.threadID);
+      if (args.length === 0) {
+        return api.sendMessage(this.config.guide.en, event.threadID, event.messageID);
       }
 
-      const command = args[0].toLowerCase();
-
-      let messages;
-      let tempMailData;
-
-      // First attempt to fetch data from the first API
-      try {
-        if (command === 'inbox') {
-          const emailAddress = args[1];
-          if (!emailAddress) {
-            return api.sendMessage("Please provide an email address for the inbox.", event.threadID, event.messageID);
-          }
-
-          const inboxResponse = await axios.get(`https://api-turtle.onrender.com/api/mail/${emailAddress}`);
-          messages = inboxResponse.data;
-        } else if (command === 'create') {
-          const tempMailResponse = await axios.get("https://api-turtle.onrender.com/api/mail/create");
-          tempMailData = tempMailResponse.data;
-        }
-      } catch (firstError) {
-        console.error('First API Error:', firstError);
-        // If the first API call fails, attempt to fetch data from the second API
+      if (args[0] === "create") {
         try {
-          if (command === 'inbox') {
-            const emailAddress = args[1];
-            const inboxResponse = await axios.get(`https://api-samir.onrender.com/tempmail/inbox/${emailAddress}`);
-            messages = inboxResponse.data;
-          } else if (command === 'create') {
-            const tempMailResponse = await axios.get("https://api-samir.onrender.com/tempmail/get");
-            tempMailData = tempMailResponse.data;
-          }
-        } catch (secondError) {
-          console.error('Second API Error:', secondError);
-          // If the second API call fails, attempt to fetch data from the third API
-          try {
-            if (command === 'inbox') {
-              const emailAddress = args[1];
-              const inboxResponse = await axios.get(`https://tempmail-api.codersensui.repl.co/api/getmessage/${emailAddress}`);
-              messages = inboxResponse.data.messages;
-            } else if (command === 'create') {
-              const tempMailResponse = await axios.get('https://tempmail-api.codersensui.repl.co/api/gen');
-              tempMailData = tempMailResponse.data;
-            }
-          } catch (thirdError) {
-            console.error('Third API Error:', thirdError);
-            // If all API calls fail to fetch data, send a specific error message
-            return api.sendMessage("(⁠  ⁠･ั⁠﹏⁠･ั⁠) can't fetch emails, all APIs are dead.", event.threadID, event.messageID);
-          }
+          const response = await axios.get("https://himachalwale.onrender.com/api/tempmail/get?apikey=©himachalwale");
+          const responseData = response.data.tempmail;
+          api.sendMessage(`📩 Here's your generated temporary email: ${responseData}`, event.threadID, event.messageID);
+        } catch (error) {
+          console.error("❌ | Error", error);
+          api.sendMessage("❌|Unable to generate email address. Please try again later...", event.threadID, event.messageID);
         }
+      } else if (args[0].toLowerCase() === "inbox" && args.length === 2) {
+        const email = args[1];
+        try {
+          const response = await axios.get(`https://himachalwale.onrender.com/api/tempmail/inbox?email=${email}&apikey=©himachalwale`);
+          const data = response.data;
+          const inboxMessages = data.map(({ from, subject, body }) => `📧 Sender: ${from}\n📑 Subject: ${subject || 'Empty'}\n📩 Message: ${body}`).join('\n\n');
+          if (inboxMessages) {
+            api.sendMessage(`📬 Inbox Messages: 📬\n\n${inboxMessages}`, event.threadID, event.messageID);
+          } else {
+            api.sendMessage("❌|Can't get any mail yet. Please send mail first.", event.threadID, event.messageID);
+          }
+        } catch (error) {
+          console.error("🔴 Error", error);
+          api.sendMessage("❌|Can't get any mail yet. Please send mail first.", event.threadID, event.messageID);
+        }
+      } else {
+        api.sendMessage("❌ | Use 'Tempmail create' to generate email and 'Tempmail inbox {email}' to get the inbox emails.", event.threadID, event.messageID);
       }
 
-      // Process the data obtained from either API
-      if (messages && messages.length > 0) {
-        let messageText = '📬 Inbox Messages: 📬\n\n';
-        for (const message of messages) {
-          messageText += `📧 Sender: ${message.from}\n`;
-          messageText += `📑 Subject: ${message.subject || 'Empty'}\n`;
-          messageText += `📩 Message: ${message.body}\n`;
-        }
-        api.sendMessage(messageText, event.threadID);
-      } else if (tempMailData && tempMailData.email) {
-        api.sendMessage(`📩 Here's your generated temporary email: ${tempMailData.email}`, event.threadID);
-      } else {
-        api.sendMessage("No data found.", event.threadID, event.messageID);
-      }
     } catch (error) {
-      console.error('General Error:', error);
-      api.sendMessage("An error occurred.", event.threadID, event.messageID);
+      console.error(error);
+      return api.sendMessage(`An error occurred. Please try again later.`, event.threadID, event.messageID);
     }
   }
 };
