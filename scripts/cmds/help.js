@@ -154,11 +154,6 @@ remini: {
     description: "plays a song",
     guide: "-song perfect by ed sheeran"
   },
-  spotify: {
-    name: "spotify",
-    description: "fetches song from spotify",
-    guide: "-spotify perfect by ed sheeran"
-  },
   alldl: {
     name: "alldl",
     description: "downloads reels, shorts, insta, tiktok videos, and spotify song through link",
@@ -264,7 +259,6 @@ module.exports = {
 │ - Opm
 │ - Play
 │ - Song
-│ - Spotify
 ╰─━━━━━━━━━╾─╯
 ╭─╼━━━━━━━━╾─╮
 │  👥 | 𝙼𝚎𝚖𝚋𝚎𝚛𝚜
