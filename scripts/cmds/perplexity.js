@@ -1,52 +1,102 @@
 const axios = require("axios");
 
+const apiClient = axios.create({
+  baseURL: "https://for-devs.onrender.com/api",
+  timeout: 5000,
+});
+
+const sendErrorMessage = (message, errorMessage) => {
+  message.reply({ body: errorMessage });
+};
+
+const getApiResponse = async (prompt, uid, apikey) => {
+  try {
+    const response = await apiClient.get("/pi", {
+      params: { query: prompt, uid, apikey },
+    });
+    return response.data?.result;
+  } catch (error) {
+    console.error("API Request Error:", error.message);
+    throw new Error("Server not responding ❌");
+  }
+};
+
+const handleApiResponse = (message, event, commandName, result) => {
+  const replyMessage = `✨ | 𝙿𝚎𝚛𝚙𝚕𝚎𝚡𝚒𝚝𝚢 |\n━━━━━━━━━━━━━━━━\n${result}\n━━━━━━━━━━━━━━━━`;
+
+  message.reply(
+    { body: replyMessage },
+    (err, info) => {
+      if (err) {
+        console.error("Message Reply Error:", err);
+        sendErrorMessage(message, "Failed to send reply ❌");
+        return;
+      }
+
+      global.GoatBot.onReply.set(info.messageID, {
+        commandName,
+        messageID: info.messageID,
+        author: event.senderID,
+      });
+    }
+  );
+};
+
 module.exports = {
   config: {
-    name: 'perplexity',
-    version: '1.0.2',
-    author: 'Shikaki & Aliester Crowley',
-    countDown: 10,
-    category: 'Ai',
-    description: {
-      en: 'perplexity ai: Can use Internet.',
+    name: "perplexity",
+    version: "1.0",
+    author: "Rishad",
+    countDown: 5,
+    role: 0,
+    shortDescription: {
+      vi: "chat with PI AI",
+      en: "chat with PI AI"
     },
+    longDescription: {
+      vi: "chat with PI AI",
+      en: "chat with PI AI"
+    },
+    category: "AI",
     guide: {
-      en: '{pn} [prompt]',
-    },
+      en: `{pn} 'prompt'\nexample:\n{pn} hi there \nyou can reply to chat\nuse clear to delete conversations`
+    }
   },
-
-  onStart: async function ({ api, message, event, args, commandName }) {
-    let prompt = args.join(" ");
-
-    if (!prompt) {
-      message.reply("Please enter a query.");
-      return;
-    }
-
-    if (prompt.toLowerCase() === "clear") {
-      const clear = await axios.get(`https://pi.aliestercrowley.com/api/reset?uid=${event.senderID}`);
-      message.reply(clear.data.message);
-      return;
-    }
-
-    const startTime = new Date().getTime(); 
-
-    api.setMessageReaction("⌛", event.messageID, () => { }, true);
-
-    const url = `https://pi.aliestercrowley.com/api?prompt=${encodeURIComponent(prompt)}&uid=${event.senderID}`;
+  onStart: async function ({ message, event, args, commandName }) {
+    const prompt = args.join(" ") || "hi";
 
     try {
-      const response = await axios.get(url);
-      const result = response.data.response;
+      const uid = event.senderID;
+      const result = await getApiResponse(prompt, uid, "api1");
 
-      const endTime = new Date().getTime();
-      const completionTime = ((endTime - startTime) / 1000).toFixed(2);
-
-      message.reply(`✨ | 𝙿𝚎𝚛𝚙𝚕𝚎𝚡𝚒𝚝𝚢 |\n━━━━━━━━━━━━━━━━\n${result}\n━━━━━━━━━━━━━━━━`);
-      api.setMessageReaction("✅", event.messageID, () => { }, true);
+      if (result) {
+        handleApiResponse(message, event, commandName, result);
+      } else {
+        console.error("API Error: No result found");
+        sendErrorMessage(message, "Server not responding ❌");
+      }
     } catch (error) {
-      message.reply('✨ | 𝙿𝚎𝚛𝚙𝚕𝚎𝚡𝚒𝚝𝚢 |\n━━━━━━━━━━━━━━━━\nAn error occurred.\n━━━━━━━━━━━━━━━━', { emoji: '❌' });
-      api.setMessageReaction("❌", event.messageID, () => { }, true);
+      sendErrorMessage(message, error.message);
     }
   },
+  onReply: async function ({ message, event, Reply, args }) {
+    const { author, commandName } = Reply;
+    if (event.senderID !== author) return;
+
+    const prompt = args.join(" ") || "hi";
+
+    try {
+      const uid = event.senderID;
+      const result = await getApiResponse(prompt, uid, "api1");
+
+      if (result) {
+        handleApiResponse(message, event, commandName, result);
+      } else {
+        console.error("API Error: No result found");
+        sendErrorMessage(message, "Server not responding ❌");
+      }
+    } catch (error) {
+      sendErrorMessage(message, error.message);
+    }
+  }
 };
