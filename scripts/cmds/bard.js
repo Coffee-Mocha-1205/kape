@@ -1,107 +1,90 @@
-const axios = require('axios');
+const a = require("axios"),
+      t = require("tinyurl");
 
-async function handleCommand(api, event, args, message) {
-  try {
-    const question = args.join(" ").trim();
-
-    if (!question) {
-      return message.reply("Please provide a question. Example: {p} cmdName {your question}");
-    }
-
-    const response = await getAnswerFromAI(question);
-
-    if (response) {
-      message.reply(response);
-    } else {
-      message.reply("Failed to get an answer. Please try again later.");
-    }
-  } catch (error) {
-    console.error("Error in handleCommand:", error.message);
-    message.reply("An error occurred while processing your request.");
-  }
-}
-
-async function getAnswerFromAI(question) {
-  try {
-    const url = 'https://haze-ultra-advanced-d80346bab842.herokuapp.com/bard';
-    const { data } = await axios.get(url, { params: { prompt: question } });
-
-    if (data && (data.gpt4 || data.reply || data.response || data.answer || data.message)) {
-      const answer = data.gpt4 || data.reply || data.response || data.answer || data.message;
-      console.log("AI Response:", answer);
-      return answer;
-    } else {
-      throw new Error("No valid response from AI");
-    }
-  } catch (error) {
-    console.error("Error in getAnswerFromAI:", error.message);
-    throw new Error("Failed to get AI response");
-  }
-}
-
-async function fetchFromAI(url, params) {
-  try {
-    const response = await axios.get(url, { params });
-    return response.data;
-  } catch (error) {
-    console.error("Network Error:", error.message);
-    return null;
-  }
-}
-
-async function getAIResponse(input, userId, messageID) {
-  const query = input.trim() || "hi";
-  const services = [
-    { url: 'https://haze-ultra-advanced-d80346bab842.herokuapp.com/bard', params: { question: query } }
-  ];
-
-  try {
-    for (const service of services) {
-      const data = await fetchFromAI(service.url, service.params);
-
-      if (data && (data.gpt4 || data.reply || data.response || data.answer || data.message)) {
-        const response = data.gpt4 || data.reply || data.response || data.answer || data.message;
-        return { response, messageID };
-      }
-    }
-
-    throw new Error("No valid response from any AI service");
-  } catch (error) {
-    console.error("Error in getAIResponse:", error.message);
-    throw error;
-  }
-}
+global.api = {
+  s: "https://apis-samir.onrender.com"
+};
 
 module.exports = {
   config: {
-    name: 'bard',
-    author: 'coffee',
+    name: "bard",
+    aliases: ["bard"],
+    version: "1.0",
+    author: "Samir OE",
+    countDown: 5,
     role: 0,
-    category: 'ai',
-    shortDescription: 'AI to answer any question',
+    category: "ai"
   },
-  onStart: async function ({ api, event, args }) {
-    const input = args.join(' ').trim();
+  onStart: async function({
+    message: m,
+    event: e,
+    args: r,
+    commandName: n
+  }) {
     try {
-      const { response, messageID } = await getAIResponse(input, event.senderID, event.messageID);
-      api.sendMessage(`🗨 | 𝙶𝚘𝚘𝚐𝚕𝚎 𝙱𝚊𝚛𝚍 |\n━━━━━━━━━━━━━━━━\n${response}━━━━━━━━━━━━━━━━`, event.threadID, messageID);
-    } catch (error) {
-      console.error("Error in onStart:", error.message);
-      api.sendMessage("An error occurred while processing your request.", event.threadID);
-    }
-  },
-  onChat: async function ({ event, message }) {
-    const messageContent = event.body.trim().toLowerCase();
-    if (messageContent.startsWith("bard")) {
-      const input = messageContent.replace(/^ai\s*/, "").trim();
-      try {
-        const { response, messageID } = await getAIResponse(input, event.senderID, message.messageID);
-        message.reply(`🗨 | 𝙶𝚘𝚘𝚐𝚕𝚎 𝙱𝚊𝚛𝚍 |\n━━━━━━━━━━━━━━━━\n${response}━━━━━━━━━━━━━━━━`, messageID);
-      } catch (error) {
-        console.error("Error in onChat:", error.message);
-        message.reply("An error occurred while processing your request.");
+      let s;
+      const i = e.senderID;
+      if ("message_reply" === e.type && ["photo", "sticker"].includes(e.messageReply.attachments?.[0]?.type)) {
+        s = await t.shorten(e.messageReply.attachments[0].url);
+      } else {
+        const o = r.join(" "),
+              c = await a.get(`${global.api.s}/Gemini?text=${encodeURIComponent(o)}&uid=${i}`);
+        if (c.data && c.data.candidates && c.data.candidates.length > 0) {
+          const t = c.data.candidates[0].content.parts[0].text,
+                e = `🗨 | 𝙶𝚘𝚘𝚐𝚕𝚎 𝙱𝚊𝚛𝚍 |━━━━━━━━━━━━━━━━\n${t}\n━━━━━━━━━━━━━━━━`;
+          m.reply({
+            body: e
+          }, (r, o) => {
+            global.GoatBot.onReply.set(o.messageID, {
+              commandName: n,
+              messageID: o.messageID,
+              author: i
+            })
+          })
+        }
       }
+      if (!s) return void console.error("Error: Invalid message or attachment type");
+      const d = `${global.api.s}/telegraph?url=${encodeURIComponent(s)}&senderId=${i}`,
+            p = await a.get(d),
+            u = p.data.result.link,
+            o = r.join(" "),
+            f = `${global.api.s}/gemini-pro?text=${encodeURIComponent(o)}&url=${encodeURIComponent(u)}`;
+      m.reply({
+        body: `🗨 | 𝙶𝚘𝚘𝚐𝚕𝚎 𝙱𝚊𝚛𝚍 |━━━━━━━━━━━━━━━━\n${(await a.get(f)).data}\n━━━━━━━━━━━━━━━━`
+      })
+    } catch (t) {
+      console.error("Error:", t.message)
     }
   },
-  handleCommand // Export the handleCommand function for command-based interactions
-};
+  onReply: async function({
+    message: m,
+    event: e,
+    Reply: r,
+    args: n
+  }) {
+    try {
+      let {
+        author: o,
+        commandName: c
+      } = r;
+      if (e.senderID !== o) return;
+      const i = n.join(" "),
+            d = await a.get(`${global.api.s}/Gemini?text=${encodeURIComponent(i)}&uid=${e.senderID}`);
+      if (d.data && d.data.candidates && d.data.candidates.length > 0) {
+        const t = d.data.candidates[0].content.parts[0].text,
+              r = `🗨 | 𝙶𝚘𝚘𝚐𝚕𝚎 𝙱𝚊𝚛𝚍 |━━━━━━━━━━━━━━━━\n${t}\n━━━━━━━━━━━━━━━━`;
+        m.reply({
+          body: r
+        }, (t, n) => {
+          global.GoatBot.onReply.set(n.messageID, {
+            commandName: c,
+            messageID: n.messageID,
+            author: e.senderID
+          })
+        })
+      }
+    } catch (t) {
+      console.error("Error:", t.message)
+    }
+  }
+}
