@@ -1,209 +1,183 @@
 [
     {
-        "key": "sb",
-        "value": "i8dmZi2fGAfjd0P7Y9NNnU5r",
-        "expires": "2025-07-15T09:29:47.000Z",
-        "maxAge": 34560000,
-        "domain": "facebook.com",
-        "path": "/",
-        "secure": true,
+        "domain": ".facebook.com",
+        "expirationDate": 1752572369.528454,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.362Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
+        "name": "ps_l",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "1"
     },
     {
-        "key": "fr",
-        "value": "02X03AidWtkpgbQds.AWVA7QoNAKkw4ASz22OO1tecgOE.BmZseL..AAA.0.0.BmZseP.AWUR5vBI1Os",
-        "expires": "2024-09-08T09:29:51.000Z",
-        "maxAge": 7776000,
-        "domain": "facebook.com",
-        "path": "/",
-        "secure": true,
+        "domain": ".facebook.com",
+        "expirationDate": 1752572369.528526,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.364Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
-    },
-    {
-        "key": "datr",
-        "value": "i8dmZg7DwWn4mb5beYaVqVtH",
-        "domain": "facebook.com",
+        "name": "datr",
         "path": "/",
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.462Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
-    },
-    {
-        "key": "c_user",
-        "value": "61560861089728",
-        "expires": "2025-06-10T09:29:47.000Z",
-        "maxAge": 31536000,
-        "domain": "facebook.com",
-        "path": "/",
+        "sameSite": "no_restriction",
         "secure": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:49.892Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
+        "session": false,
+        "storeId": null,
+        "value": "0slmZkJfAWMSX_PAXn_SONeG"
     },
     {
-        "key": "xs",
-        "value": "17%3AJ2CPC2poRcMvTA%3A2%3A1718011788%3A-1%3A-1",
-        "expires": "2025-06-10T09:29:47.000Z",
-        "maxAge": 31536000,
-        "domain": "facebook.com",
-        "path": "/",
-        "secure": true,
+        "domain": ".facebook.com",
+        "expirationDate": 1725788441.555117,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:49.893Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
+        "name": "fr",
+        "path": "/",
+        "sameSite": "no_restriction",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "0VbHi7NYzNzUlDuOW..BmZsnS..AAA.0.0.BmZsoa.AWX2Mq5WKK4"
     },
     {
-        "key": "sb",
-        "value": "i8dmZi2fGAfjd0P7Y9NNnU5r",
-        "expires": "2025-07-15T09:29:47.000Z",
-        "maxAge": 34560000,
-        "domain": "facebook.com",
+        "domain": ".facebook.com",
+        "expirationDate": 1723196449,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "vpd",
         "path": "/",
+        "sameSite": "lax",
         "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "v1%3B668x360x2.5506443977355957"
+    },
+    {
+        "domain": ".facebook.com",
+        "expirationDate": 1749548441.367586,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.362Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
+        "name": "xs",
+        "path": "/",
+        "sameSite": "no_restriction",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "5%3A3YVyQf88RivJig%3A2%3A1718012439%3A-1%3A7829"
     },
     {
-        "key": "fr",
-        "value": "02X03AidWtkpgbQds.AWVA7QoNAKkw4ASz22OO1tecgOE.BmZseL..AAA.0.0.BmZseP.AWUR5vBI1Os",
-        "expires": "2024-09-08T09:29:51.000Z",
-        "maxAge": 7776000,
-        "domain": "facebook.com",
+        "domain": ".facebook.com",
+        "expirationDate": 1749548449,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "fbl_st",
         "path": "/",
+        "sameSite": "strict",
         "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "100430120%3BT%3A28633540"
+    },
+    {
+        "domain": ".facebook.com",
+        "expirationDate": 1718617248.377778,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "locale",
+        "path": "/",
+        "sameSite": "no_restriction",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "en_US"
+    },
+    {
+        "domain": ".facebook.com",
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "m_pixel_ratio",
+        "path": "/",
+        "sameSite": null,
+        "secure": true,
+        "session": true,
+        "storeId": null,
+        "value": "2.5506443977355957"
+    },
+    {
+        "domain": ".facebook.com",
+        "expirationDate": 1749548441.367558,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "c_user",
+        "path": "/",
+        "sameSite": "no_restriction",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "100089711433302"
+    },
+    {
+        "domain": ".facebook.com",
+        "expirationDate": 1725788451.093559,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.364Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
-    },
-    {
-        "key": "datr",
-        "value": "i8dmZg7DwWn4mb5beYaVqVtH",
-        "domain": "facebook.com",
+        "name": "m_page_voice",
         "path": "/",
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.462Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
-    },
-    {
-        "key": "c_user",
-        "value": "61560861089728",
-        "expires": "2025-06-10T09:29:47.000Z",
-        "maxAge": 31536000,
-        "domain": "facebook.com",
-        "path": "/",
+        "sameSite": "lax",
         "secure": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:49.892Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
+        "session": false,
+        "storeId": null,
+        "value": "100089711433302"
     },
     {
-        "key": "xs",
-        "value": "17%3AJ2CPC2poRcMvTA%3A2%3A1718011788%3A-1%3A-1",
-        "expires": "2025-06-10T09:29:47.000Z",
-        "maxAge": 31536000,
-        "domain": "facebook.com",
-        "path": "/",
-        "secure": true,
+        "domain": ".facebook.com",
+        "expirationDate": 1752572369.528308,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:49.893Z",
-        "lastAccessed": "2024-06-10T09:29:52.393Z"
+        "name": "ps_n",
+        "path": "/",
+        "sameSite": "no_restriction",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "1"
     },
     {
-        "key": "sb",
-        "value": "i8dmZi2fGAfjd0P7Y9NNnU5r",
-        "expires": "2025-07-15T09:29:47.000Z",
-        "maxAge": 34560000,
-        "domain": "messenger.com",
-        "path": "/",
-        "secure": true,
+        "domain": ".facebook.com",
+        "expirationDate": 1752572441.367518,
+        "hostOnly": false,
         "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.363Z",
-        "lastAccessed": "2024-06-10T09:29:52.394Z"
+        "name": "sb",
+        "path": "/",
+        "sameSite": "no_restriction",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "0slmZviybiOFLzOmQZN0vEJo"
     },
     {
-        "key": "fr",
-        "value": "02X03AidWtkpgbQds.AWVA7QoNAKkw4ASz22OO1tecgOE.BmZseL..AAA.0.0.BmZseP.AWUR5vBI1Os",
-        "expires": "2024-09-08T09:29:51.000Z",
-        "maxAge": 7776000,
-        "domain": "messenger.com",
-        "path": "/",
-        "secure": true,
-        "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
+        "domain": ".facebook.com",
+        "expirationDate": 1718617170,
         "hostOnly": false,
-        "creation": "2024-06-10T09:29:47.365Z",
-        "lastAccessed": "2024-06-10T09:29:52.394Z"
+        "httpOnly": false,
+        "name": "wd",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "423x785"
     },
     {
-        "key": "c_user",
-        "value": "61560861089728",
-        "expires": "2025-06-10T09:29:47.000Z",
-        "maxAge": 31536000,
-        "domain": "messenger.com",
-        "path": "/",
-        "secure": true,
-        "extensions": [
-            "SameSite=None"
-        ],
+        "domain": ".facebook.com",
+        "expirationDate": 1725788448,
         "hostOnly": false,
-        "creation": "2024-06-10T09:29:49.897Z",
-        "lastAccessed": "2024-06-10T09:29:52.394Z"
-    },
-    {
-        "key": "xs",
-        "value": "17%3AJ2CPC2poRcMvTA%3A2%3A1718011788%3A-1%3A-1",
-        "expires": "2025-06-10T09:29:47.000Z",
-        "maxAge": 31536000,
-        "domain": "messenger.com",
+        "httpOnly": false,
+        "name": "wl_cbv",
         "path": "/",
+        "sameSite": "no_restriction",
         "secure": true,
-        "httpOnly": true,
-        "extensions": [
-            "SameSite=None"
-        ],
-        "hostOnly": false,
-        "creation": "2024-06-10T09:29:49.898Z",
-        "lastAccessed": "2024-06-10T09:29:52.394Z"
+        "session": false,
+        "storeId": null,
+        "value": "v2%3Bclient_version%3A2521%3Btimestamp%3A1718012448"
     }
 ]
