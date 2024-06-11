@@ -19,7 +19,7 @@ module.exports = {
     }
   },
 
-  onStart: async function ({ api, event, args, usersData }) {
+  onStart: async function ({ api, event, args }) {
     try {
       const keySearch = args.join(" ");
       const keySearchs = keySearch.substr(0, keySearch.indexOf('-')).trim();
@@ -29,7 +29,7 @@ module.exports = {
       let numberSearch = parseInt(keySearch.split("-").pop().trim()) || 1;
       numberSearch = Math.min(Math.max(numberSearch, 1), 12); // Adjusted to ensure the range is between 1 and 12
 
-      let imgData;
+      let imgData = [];
       let fetchedImageUrls = [];
 
       // Attempt to fetch images from the first API
@@ -61,7 +61,7 @@ module.exports = {
       }
 
       // If no images were fetched from the first API, try the second API
-      if (!imgData) {
+      if (imgData.length === 0) {
         try {
           const { data } = await axios.get(`https://celestial-dainsleif-v2.onrender.com/pinterest?pinte=${encodeURIComponent(keySearchs)}`);
 
@@ -90,13 +90,16 @@ module.exports = {
         }
       }
 
-      // If still no images, try the third API
-      if (!imgData) {
+      // If still no images, try the new third API
+      if (imgData.length === 0) {
         try {
-          const { data } = await axios.get(`https://pin-kshitiz.vercel.app/pin?search=${encodeURIComponent(keySearchs)}`);
+          const apiUrl = `https://itsaryan.onrender.com/api/pinterest?query=${encodeURIComponent(keySearchs)}&limits=${numberSearch}`;
+          const res = await axios.get(apiUrl);
+          const data = res.data;
 
-          if (Array.isArray(data.result) && data.result.length > 0) {
-            imgData = await Promise.all(data.result.slice(0, numberSearch).map(async (imageUrl, i) => {
+          if (Array.isArray(data) && data.length > 0) {
+            imgData = await Promise.all(data.slice(0, numberSearch).map(async (item, i) => {
+              const imageUrl = item;
               if (!fetchedImageUrls.includes(imageUrl)) {
                 fetchedImageUrls.push(imageUrl);
 
