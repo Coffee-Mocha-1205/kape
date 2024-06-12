@@ -28,7 +28,7 @@ module.exports = {
   },
 
   onChat: async function ({ event, message, getLang }) {
-    if (event.body && (event.body.toLowerCase() === "prefix" || event.body.toLowerCase() === "🧋"))
+    if (event.body && (event.body.toLowerCase() === "prefix" || event.body.toLowerCase() === ""))
       return () => {
         return message.reply(getLang("myPrefix", global.GoatBot.config.prefix, utils.getPrefix(event.threadID)));
       };
