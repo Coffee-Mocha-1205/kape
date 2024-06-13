@@ -49,11 +49,6 @@ axis: {
     description: "Google Bard",
     guide: "-bard what is life"
   },
-adduser: {
-    name: "adduser",
-    description: "add users to group chat using their uid or profile link",
-    guide: "-adduser <uid>\n-adduser <profile link>"
-  },
   tempmail: {
     name: "tempmail",
     description: "Get Temporary Emails and it's Inbox messages",
@@ -94,11 +89,6 @@ adduser: {
     description: "a girl you can talk with when bored",
     guide: "-tia do you have a boyfriend?"
   },
-  dalle: {
-    name: "animagine",
-    description: "make anime image through text",
-    guide: "-animagine cat"
-  },
   image: {
     name: "image",
     description: "Search HD images online",
@@ -119,17 +109,12 @@ adduser: {
     description: "make images through texts",
     guide: "-prodia cat"
   },
-  imagine: {
-    name: "imagine",
-    description: "make animated images through your imagination",
-    guide: "-imagine cat with dinosaur's body"
-  },
   remini: {
     name: "remini",
     description: "enhances your image to lessen the blur",
     guide: "reply to image and type -remini"
   },
-remini: {
+upscale: {
     name: "upscale",
     description: "enhances your image to lessen the blur",
     guide: "reply to image and type -upscale"
@@ -159,11 +144,6 @@ remini: {
     description: "downloads reels, shorts, insta, tiktok videos, and spotify song through link",
     guide: "-alldl <link>"
   },
-  clean: {
-    name: "clean",
-    description: "Cleans cache files of the bot",
-    guide: "-clean"
-  },
   font: {
     name: "font",
     description: "changes your font text",
@@ -179,11 +159,6 @@ remini: {
     description: "view some commands and shows bot's prefix",
     guide: "prefix"
   },
-  stat: {
-    name: "stat",
-    description: "See server stats where bot is running",
-    guide: "-stat"
-  },
   uid: {
     name: "uid",
     description: "shows your facebook uid",
@@ -194,11 +169,6 @@ remini: {
     description: "deletes bot messages",
     guide: "reply to bot message and type -unsend"
   },
-  uptime: {
-    name: "uptime",
-    description: "Shows how many hours the bot is running",
-    guide: "-uptime"
-  },
 };
 
 module.exports = {
@@ -206,7 +176,7 @@ module.exports = {
     name: "help",
     aliases: ["help"],
     version: 1.0,
-    author: "LiANE",
+    author: "LiANE&Coffee",
     shortDescription: { en: "View all commands" },
     category: "members",
   },
@@ -263,28 +233,14 @@ module.exports = {
 ╭─╼━━━━━━━━╾─╮
 │  👥 | 𝙼𝚎𝚖𝚋𝚎𝚛𝚜
 │ - Alldl
-│ - Adduser
-│ - Clean
 │ - Font
 │ - Help
 │ - Join
 │ - Prefix
 │ - Removebg
-│ - Stat
 │ - Tempmail
 │ - Uid
 │ - Unsend
-│ - Uptime
-╰─━━━━━━━━━╾─╯
-╭─╼━━━━━━━━╾─╮
-│  👑 | 𝙱𝚘𝚝 𝙾𝚠𝚗𝚎𝚛
-│ - Ban
-│ - Cmd
-│ - Delete
-│ - Filteruser
-│ - Kick
-│ - Leave
-│ - Restart 
 ╰─━━━━━━━━━╾─╯
 -𝚑𝚎𝚕𝚙 <𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚗𝚊𝚖𝚎>
 𝚃𝚘 𝚜𝚎𝚎 𝚑𝚘𝚠 𝚝𝚘 𝚞𝚜𝚎 𝚝𝚑𝚎 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜
