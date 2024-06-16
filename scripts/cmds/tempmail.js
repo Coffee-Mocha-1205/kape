@@ -3,60 +3,86 @@ const axios = require("axios");
 module.exports = {
   config: {
     name: "tempmail",
-    version: "1.0",
-    author: "ARN",
-    countDown: 5,
+    aliases: ["tm"],
+    version: "1.0.0",
+    author: "Upol | ArYAN | ARN",
     role: 0,
-    shortDescription: {
-      en: "retrieve emails and inbox messages",
-      vi: "retrieve emails and inbox messages",
-    },
+    countDown: 5,
     longDescription: {
-      en: "retrieve emails and inbox messages",
-      vi: "retrieve emails and inbox messages",
+      en: "Generate temporary email and check inbox"
     },
-    category: "tool",
+    category: "email",
     guide: {
-      en: "{pn} gen\n{pn} inbox (email)",
-      vi: "{pn} gen\n{pn} inbox (email)",
-    },
+      en: ".tempmail <subcommand>\n\nFor Example:\n.tempmail create\n.tempmail inbox <tempmail>"
+    }
   },
+  onStart: async function ({ api, event, args }) {
+    const primaryApi = "https://himachalwale.onrender.com/api/tempmail/";
+    const secondaryApi = "https://for-devs.onrender.com/api/mail/";
+    const apiKey = "©himachalwale";
+    const fallbackApiKey = "api1";
 
-  onStart: async function ({ api, args, event }) {
-    const command = args[0];
+    if (args.length === 0) {
+      return api.sendMessage(this.config.guide.en, event.threadID, event.messageID);
+    }
 
-    if (command === "gen") {
+    const fetchEmail = async (apiUrl, key) => {
       try {
-        const response = await axios.get("https://for-devs.onrender.com/api/mail/gen?apikey=api1");
-        const email = response.data.email;
-        return api.sendMessage(`𝗀𝖾𝗇𝖾𝗋𝖺𝗍𝖾𝖽 𝖾𝗆𝖺𝗂𝗅: ${email}`, event.threadID);
+        const response = await axios.get(`${apiUrl}get?apikey=${key}`);
+        return response.data.tempmail || response.data.email;
       } catch (error) {
-        console.error(error);
-        return api.sendMessage("Failed to generate email.", event.threadID);
+        console.error("Error fetching email:", error);
+        throw error;
       }
-    } else if (command === "inbox") {
+    };
+
+    const fetchInbox = async (apiUrl, email, key) => {
+      try {
+        const response = await axios.get(`${apiUrl}inbox?email=${email}&apikey=${key}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching inbox:", error);
+        throw error;
+      }
+    };
+
+    if (args[0] === "create") {
+      try {
+        const email = await fetchEmail(primaryApi, apiKey);
+        api.sendMessage(`📩 Here's your generated temporary email: ${email}`, event.threadID, event.messageID);
+      } catch {
+        try {
+          const email = await fetchEmail(secondaryApi, fallbackApiKey);
+          api.sendMessage(`📩 Here's your generated temporary email: ${email}`, event.threadID, event.messageID);
+        } catch {
+          api.sendMessage("❌ Unable to generate email address. Please try again later...", event.threadID, event.messageID);
+        }
+      }
+    } else if (args[0].toLowerCase() === "inbox" && args.length === 2) {
       const email = args[1];
-
-      if (!email) {
-        return api.sendMessage("𝖯𝗋𝗈𝗏𝗂𝖽𝖾 𝖺𝗇 𝖾𝗆𝖺𝗂𝗅 𝖺𝖽𝖽𝗋𝖾𝗌𝗌 𝖿𝗈𝗋 𝗍𝗁𝖾 𝗂𝗇𝖻𝗈𝗑.", event.threadID);
-      }
-
-   try {
-        const inboxResponse = await axios.get(`https://for-devs.onrender.com/api/mail/inbox?email=${email}&apikey=api1`);
-        const inboxMessages = inboxResponse.data;
-
-        const formattedMessages = inboxMessages.map((message) => {
-          return `${message.date} - From: ${message.sender}\n${message.message}`;
-        });
-
-        return api.sendMessage(`𝗂𝗇𝖻𝗈𝗑 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝖿𝗈𝗋 ${email}:\n\n${formattedMessages.join("\n\n")}\n\nOld messages will be deleted after some time.`, event.threadID);
-
-      } catch (error) {
-        console.error(error);
-        return api.sendMessage("𝖥𝖺𝗂𝗅𝖾𝖽 𝗍𝗈 𝗋𝖾𝗍𝗋𝗂𝖾𝗏𝖾 𝗂𝗇𝖻𝗈𝗑 𝗆𝖾𝗌𝗌𝖺𝗀𝖾.", event.threadID);
+      try {
+        const inboxMessages = await fetchInbox(primaryApi, email, apiKey);
+        const formattedMessages = inboxMessages.map(({ from, subject, body }) => `📧 Sender: ${from}\n📑 Subject: ${subject || 'Empty'}\n📩 Message: ${body}`).join('\n\n');
+        if (formattedMessages) {
+          api.sendMessage(`📬 Inbox Messages: 📬\n\n${formattedMessages}`, event.threadID, event.messageID);
+        } else {
+          api.sendMessage("❌ Can't get any mail yet. Please send mail first.", event.threadID, event.messageID);
+        }
+      } catch {
+        try {
+          const inboxMessages = await fetchInbox(secondaryApi, email, fallbackApiKey);
+          const formattedMessages = inboxMessages.map((message) => `${message.date} - From: ${message.sender}\n${message.message}`).join("\n\n");
+          if (formattedMessages) {
+            api.sendMessage(`📬 Inbox Messages: 📬\n\n${formattedMessages}`, event.threadID, event.messageID);
+          } else {
+            api.sendMessage("❌ Can't get any mail yet. Please send mail first.", event.threadID, event.messageID);
+          }
+        } catch {
+          api.sendMessage("❌ Can't get any mail yet. Please try again later.", event.threadID, event.messageID);
+        }
       }
     } else {
-      return api.sendMessage("Invalid command. Use {pn} gen or {pn} inbox (email).", event.threadID);
+      api.sendMessage("❌ Use 'tempmail create' to generate email and 'tempmail inbox {email}' to get the inbox emails.", event.threadID, event.messageID);
     }
   }
 };
