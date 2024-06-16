@@ -172,13 +172,10 @@ module.exports = {
 │  📖 | 𝙴𝚍𝚞𝚌𝚊𝚝𝚒𝚘𝚗
 │ - AI
 │ - Axis
-│ - Bard
 │ - Blackbox
 │ - Claire
-│ - Gpt
 │ - Gemini
 │ - Translate
-│ - Perplexity
 ╰─━━━━━━━━━╾─╯
 ╭─╼━━━━━━━━╾─╮
 │  🗨 | 𝙰𝚒 - 𝙲𝚑𝚊𝚝 
@@ -191,7 +188,6 @@ module.exports = {
 │ - Animagine
 │ - Image
 │ - Gmage
-│ - Gpt Draw
 │ - Pinterest
 │ - Prodia
 │ - Remini
@@ -213,7 +209,6 @@ module.exports = {
 │ - Join
 │ - Prefix
 │ - Removebg
-│ - Tempmail
 │ - Uid
 │ - Unsend
 ╰─━━━━━━━━━╾─╯
