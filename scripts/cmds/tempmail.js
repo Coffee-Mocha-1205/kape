@@ -13,7 +13,7 @@ module.exports = {
     },
     category: "email",
     guide: {
-      en: ".tempmail <subcommand>\n\nFor Example:\n.tempmail create\n.tempmail inbox <tempmail>"
+      en: "-tempmail <subcommand>\n\nFor Example:\n.tempmail create\n.tempmail inbox <tempmail>"
     }
   },
   onStart: async function ({ api, event, args }) {
