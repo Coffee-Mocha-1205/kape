@@ -39,35 +39,10 @@ axis: {
     description: "BlackBox Ai that you can ask for anything.",
     guide: "-blackbox what is life?"
   },
-  perplexity: {
-    name: "perplexity",
-    description: "Perplexity AI: Fine-tuned for Google search.",
-    guide: "-perplexity what is life?"
-  },
-  bard: {
-    name: "bard",
-    description: "Google Bard",
-    guide: "-bard what is life"
-  },
-  tempmail: {
-    name: "tempmail",
-    description: "Get Temporary Emails and it's Inbox messages",
-    guide: "-tempmail create\n-tempmail inbox <email>"
-  },
   claire: {
     name: "claire",
     description: "an ai based on gpt-4",
     guide: "-claire what is life"
-  },
-  gpt: {
-    name: "gpt",
-    description: "ChatGPT 3.5",
-    guide: "-gpt what is life?"
-  },
-  gptdraw: {
-    name: "gptdraw",
-    description: "generates image using chatgpt",
-    guide: "-gpt draw cat"
   },
   gemini: {
     name: "gemini",
