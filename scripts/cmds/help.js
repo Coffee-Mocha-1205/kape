@@ -9,6 +9,11 @@ const commandInfoMap = {
     description: "remove background of an image",
     guide: "reply to an image and type\n-removebg or -rbg"
     },
+animagine: {
+    name: "animagine",
+    description: "makes an animated image based on your imagination",
+    guide: "-animagine cat with wings"
+    },
   knight: {
     name: "knight",
     description: "a medieval knight that has been called upon as an ai you can talk to",
