@@ -3,7 +3,7 @@ const axios = require("axios");
 module.exports = {
   config: {
     name: "tempmail",
-    aliases: ["tm"],
+    aliases: ["tm","mail","temp"],
     version: "1.0.0",
     author: "Upol | ArYAN | ARN",
     role: 0,
