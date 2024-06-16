@@ -4,6 +4,11 @@ const commandInfoMap = {
     description: "Ai Based on GPT-4",
     guide: "-ai what is life?"
     },
+  tempmail: {
+    name: "tempmail",
+    description: "Get Temporary Emails and it's Inbox messages",
+    guide: "-tempmail create\n-tempmail inbox <email>"
+  },
   removebg: {
     name: "removebg",
     description: "remove background of an image",
@@ -214,6 +219,7 @@ module.exports = {
 │ - Join
 │ - Prefix
 │ - Removebg
+│ - Tempmail
 │ - Uid
 │ - Unsend
 ╰─━━━━━━━━━╾─╯
