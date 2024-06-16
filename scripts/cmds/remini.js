@@ -1,11 +1,12 @@
 const axios = require('axios');
 const fs = require('fs-extra');
+const tinyurl = require('tinyurl');
 
 module.exports = {
   config: {
     name: "remini",
-    aliases: [],
-    author: "Hazeyy/kira", // Hindi ito collab, ako kasi nag-convert :>
+    aliases: ["remini"],
+    author: "Hazeyy/kira/JARiF",
     version: "69",
     cooldowns: 5,
     role: 0,
@@ -17,7 +18,7 @@ module.exports = {
     },
     category: "image",
     guide: {
-      en: "{p}{n} [reply to an img]"
+      en: "{p}{n} [reply to an img or provide an image URL]"
     }
   },
 
@@ -43,8 +44,12 @@ module.exports = {
 
     api.sendMessage("⊂⁠(⁠・⁠﹏⁠・⁠⊂⁠) | Please wait...", threadID, async () => {
       try {
-        const response = await axios.get(`https://haze-code-merge-0f8f4bbdea12.herokuapp.com/api/try/remini?url=${encodeURIComponent(photoUrl)}`);
-        const processedImageURL = response.data.image_data;
+        // Shorten the photo URL using TinyURL
+        const shortenedUrl = await tinyurl.shorten(photoUrl);
+
+        // Fetch the upscaled image using the upscale API
+        const response = await axios.get(`https://www.api.vyturex.com/upscale?imageUrl=${shortenedUrl}`);
+        const processedImageURL = response.data.resultUrl;
 
         // Fetch the processed image
         const enhancedImage = await axios.get(processedImageURL, { responseType: "arraybuffer" });
@@ -59,7 +64,7 @@ module.exports = {
         }, threadID, () => fs.unlinkSync(pathie), messageID);
       } catch (error) {
         // Handle errors gracefully
-        api.sendMessage(`(⁠┌⁠・⁠。⁠・⁠)⁠┌ | Api Dead...: ${error}`, threadID, messageID);
+        api.sendMessage(`(⁠┌⁠・⁠。⁠・⁠)⁠┌ | Api Dead...: ${error.message}`, threadID, messageID);
       }
     });
   }
