@@ -131,9 +131,7 @@ module.exports = {
         body: `Here are the top ${imgData.length} image results for "${keySearchs}":`
       }, event.threadID, event.messageID);
 
-      // Delete the entire 'tmp' folder after sending images
       await fs.remove(path.join(__dirname, 'tmp'));
-
     } catch (error) {
       console.error("Error in Pinterest bot:", error);
       if (error.message === "No images found.") {
