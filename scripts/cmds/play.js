@@ -60,7 +60,7 @@ module.exports = {
   },
 };
 
-async function handleLyrics(api, event, video, filePath, songName, messageID) {
+async function handleLyrics(api, event, video, filePath, songName, messageID) { // Add messageID parameter
   const apiUrl = `https://lyrist.vercel.app/api/${encodeURIComponent(songName)}`;
 
   try {
@@ -77,9 +77,11 @@ async function handleLyrics(api, event, video, filePath, songName, messageID) {
 
     await Promise.all([sendLyricsPromise, sendSongPromise]);
 
-    // Delete the file after sending both lyrics and song
-    await fs.unlink(filePath);
-    console.log(`Deleted file: ${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('[ERROR]', 'Failed to delete file:', err);
+      }
+    });
   } catch (error) {
     console.error('[ERROR]', error);
     api.sendMessage(`Can't fetch music for "${songName}"!`, event.threadID);
