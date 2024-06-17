@@ -3,7 +3,7 @@ const path = require("path");
 const axios = require("axios");
 const tinyurl = require('tinyurl');
 
-// Define your list of bad words (if any)
+// Define your list of bad words
 const badWords = ["cleavage","cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
 
 module.exports = {
@@ -41,7 +41,7 @@ module.exports = {
         return message.reply("Please reply to an image or provide a valid prompt.");
       }
 
-      // Check for bad words in the prompt (if needed)
+      // Check for bad words in the prompt
       if (containsBadWords(prompt)) {
         return message.reply("❌ | Your prompt contains inappropriate language.");
       }
@@ -96,13 +96,6 @@ module.exports = {
         attachment: stream
       });
 
-      // Delete the image file after sending
-      fs.unlink(imagePath, (err) => {
-        if (err) {
-          console.error("Error deleting image:", err);
-        }
-      });
-
     } catch (error) {
       console.error("Error:", error.message);
       message.reply("❌ | An error occurred. Please try again later.");
@@ -110,7 +103,7 @@ module.exports = {
   }
 };
 
-// Helper function to check for bad words (if needed)
+// Helper function to check for bad words
 function containsBadWords(prompt) {
   const promptLower = prompt.toLowerCase();
   return badWords.some(badWord => promptLower.includes(badWord));
