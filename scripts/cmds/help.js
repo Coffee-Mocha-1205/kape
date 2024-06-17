@@ -34,11 +34,6 @@ axis: {
     description: "Join existing group chats where the bot is in.",
     guide: "-join"
   },
-  opm: {
-    name: "opm",
-    description: "sends random opm (original pilipino music)",
-    guide: "-opm"
-  },
   blackbox: {
     name: "blackbox",
     description: "BlackBox Ai that you can ask for anything.",
@@ -99,15 +94,10 @@ axis: {
     description: "Fetches lyrics of a song",
     guide: "-lyrics perfect by ed sheeran"
   },
-  play: {
-    name: "play",
-    description: "plays a song with lyrics",
-    guide: "-play perfect by ed sheeran"
-  },
-  song: {
-    name: "song",
-    description: "plays a song",
-    guide: "-song perfect by ed sheeran"
+  spotify: {
+    name: "spotify",
+    description: "plays a song available in spotify",
+    guide: "-spotify perfect by ed sheeran"
   },
   alldl: {
     name: "alldl",
@@ -190,9 +180,7 @@ module.exports = {
 │  🎧 | 𝙼𝚞𝚜𝚒𝚌
 │ - Chords 
 │ - Lyrics
-│ - Opm
-│ - Play
-│ - Song
+│ - Spotify
 ╰─━━━━━━━━━╾─╯
 ╭─╼━━━━━━━━╾─╮
 │  👥 | 𝙼𝚎𝚖𝚋𝚎𝚛𝚜
