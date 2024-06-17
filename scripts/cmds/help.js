@@ -39,11 +39,6 @@ axis: {
     description: "sends random opm (original pilipino music)",
     guide: "-opm"
   },
-  video: {
-    name: "video",
-    description: "searches and sends youtube video (mostly use between 1-7mins)",
-    guide: "-video <video title>"
-  },
   blackbox: {
     name: "blackbox",
     description: "BlackBox Ai that you can ask for anything.",
@@ -74,11 +69,6 @@ axis: {
     description: "a girl you can talk with when bored",
     guide: "-tia do you have a boyfriend?"
   },
-  image: {
-    name: "image",
-    description: "Search HD images online",
-    guide: "-image cat"
-  },
   gmage: {
     name: "gmage",
     description: "Search Google Images online",
@@ -98,11 +88,6 @@ axis: {
     name: "remini",
     description: "enhances your image to lessen the blur",
     guide: "reply to image and type -remini"
-  },
-upscale: {
-    name: "upscale",
-    description: "enhances your image to lessen the blur",
-    guide: "reply to image and type -upscale"
   },
   chords: {
     name: "chords",
