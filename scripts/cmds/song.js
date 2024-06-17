@@ -46,9 +46,11 @@ module.exports = {
       stream.pipe(fs.createWriteStream(filePath));
 
       stream.on('response', () => {
+        // Handle response if needed
       });
 
       stream.on('info', (info) => {
+        // Handle info if needed
       });
 
       stream.on('end', async () => {
@@ -61,7 +63,10 @@ module.exports = {
           body: `🎧 | Playing ${video.title}`,
           attachment: fs.createReadStream(filePath),
         };
+        
+        // Send the audio file as an attachment
         await api.sendMessage(replyMessage, event.threadID, () => {
+          // Delete the temporary audio file after sending
           fs.unlinkSync(filePath);
         }, event.messageID);
       });
