@@ -59,12 +59,25 @@ module.exports = {
         const imagePath = path.join(__dirname, "cache", `prodia.png`);
         const imageResponse = await axios.get(imageUrl, { responseType: "stream" });
         const imageStream = imageResponse.data.pipe(fs.createWriteStream(imagePath));
-        imageStream.on("finish", () => {
-          const stream = fs.createReadStream(imagePath);
-          message.reply({
-            body: "",
-            attachment: stream
-          });
+        
+        // Wait for image download to finish
+        await new Promise((resolve, reject) => {
+          imageStream.on("finish", resolve);
+          imageStream.on("error", reject);
+        });
+
+        // Send the image as an attachment
+        const stream = fs.createReadStream(imagePath);
+        await message.reply({
+          body: "",
+          attachment: stream
+        });
+
+        // Delete the saved photo after sending
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error("Error deleting image:", err);
+          }
         });
       } else {
         throw new Error("Image URL not found.");
