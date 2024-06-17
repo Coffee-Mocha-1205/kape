@@ -1,7 +1,6 @@
 const axios = require('axios');
 const fs = require('fs-extra');
 const tinyurl = require('tinyurl');
-const path = require('path');
 
 module.exports = {
   config: {
@@ -26,7 +25,7 @@ module.exports = {
   onStart: async function ({ api, event }) {
     const args = event.body.split(/\s+/).slice(1); // Use slice to skip the first element
     const { threadID, messageID, messageReply } = event;
-    const tempImagePath = path.join(__dirname, 'tmp', 'enhanced_image.jpg');
+    const pathie = __dirname + `/tmp/zombie.jpg`;
 
     // Check if there's a message reply and if it has attachments
     if (!messageReply || !messageReply.attachments || !(messageReply.attachments[0] || args[0])) {
@@ -50,22 +49,19 @@ module.exports = {
 
         // Fetch the upscaled image using the upscale API
         const response = await axios.get(`https://www.api.vyturex.com/upscale?imageUrl=${shortenedUrl}`);
-        const processedImageUrl = response.data.resultUrl;
+        const processedImageURL = response.data.resultUrl;
 
         // Fetch the processed image
-        const enhancedImageResponse = await axios.get(processedImageUrl, { responseType: "arraybuffer" });
+        const enhancedImage = await axios.get(processedImageURL, { responseType: "arraybuffer" });
 
         // Save the processed image to a temporary file
-        fs.writeFileSync(tempImagePath, enhancedImageResponse.data);
+        fs.writeFileSync(pathie, enhancedImage.data);
 
         // Send the enhanced image as a reply
         api.sendMessage({
           body: "<⁠(⁠￣⁠︶⁠￣⁠)⁠> | Image Enhanced.",
-          attachment: fs.createReadStream(tempImagePath)
-        }, threadID, () => {
-          // Delete the temporary image file after sending
-          fs.unlinkSync(tempImagePath);
-        }, messageID);
+          attachment: fs.createReadStream(pathie)
+        }, threadID, () => fs.unlinkSync(pathie), messageID);
       } catch (error) {
         // Handle errors gracefully
         api.sendMessage(`(⁠┌⁠・⁠。⁠・⁠)⁠┌ | Api Dead...: ${error.message}`, threadID, messageID);
