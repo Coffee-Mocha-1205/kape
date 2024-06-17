@@ -99,11 +99,6 @@ axis: {
     description: "plays a song available in spotify",
     guide: "-spotify perfect by ed sheeran"
   },
-  alldl: {
-    name: "alldl",
-    description: "downloads reels, shorts, insta, tiktok videos, and spotify song through link",
-    guide: "-alldl <link>"
-  },
   font: {
     name: "font",
     description: "changes your font text",
@@ -118,11 +113,6 @@ axis: {
     name: "prefix",
     description: "view some commands and shows bot's prefix",
     guide: "prefix"
-  },
-  uid: {
-    name: "uid",
-    description: "shows your facebook uid",
-    guide: "-uid"
   },
   unsend: {
     name: "unsend",
