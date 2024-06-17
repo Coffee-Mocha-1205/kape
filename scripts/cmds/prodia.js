@@ -1,10 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const tinyurl = require('tinyurl');
 
-// Define your list of bad words
-const badWords = ["cleavage","cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
+// Define your list of bad words (if any)
+const badWords = [cleavage","cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe];
 
 module.exports = {
   config: {
@@ -12,83 +11,80 @@ module.exports = {
     aliases: [],
     version: "1.0",
     author: "vex_Kshitiz",
-    countDown: 20,
+    countDown: 5,
     role: 0,
-    shortDescription: "Image to image",
-    longDescription: "Image to image conversion",
-    category: "game",
+    shortDescription: "prodia",
+    longDescription: "Generate images using Prodia",
+    category: "utility",
     guide: {
-      en: "{p}prodia reply to image or {p}prodia [prompt]"
+      en: "{p} prodia [prompt]"
     }
   },
   onStart: async function ({ message, event, args, api }) {
     api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
     try {
-      const promptApiUrl = "https://www.api.vyturex.com/describe?url=";
-      const sdxlApiUrl = "https://sdxl-kshitiz.onrender.com/gen";
+      const baseUrl = "https://prodia-kshitiz-rxop.onrender.com/gen";
+      const apiKey = "79fa9d49-0f1e-4e21-a2c2-92891f2833f1";
+      
+      let prompt = args.join(" ").trim();
 
-      let imageUrl = null;
-      let prompt = '';
-      let style = 2; // Set style to 2
+      if (!prompt) {
+        return message.reply("Provide a prompt. Example: prodia cat");
+      }
 
-      // Function to check for bad words
+      // Function to check for bad words (if needed)
       function containsBadWords(text) {
         const lowerText = text.toLowerCase();
         return badWords.some(word => lowerText.includes(word));
       }
 
-      if (event.type === "message_reply") {
-        const attachment = event.messageReply.attachments[0];
-        if (!attachment || !["photo", "sticker"].includes(attachment.type)) {
-          return message.reply("❌ | Reply must be an image.");
-        }
-        imageUrl = attachment.url;
-        const promptResponse = await axios.get(promptApiUrl + encodeURIComponent(imageUrl));
-        prompt = promptResponse.data;
-      } else if (args.length > 0 && args[0].startsWith("http")) {
-        imageUrl = args[0];
-        const promptResponse = await axios.get(promptApiUrl + encodeURIComponent(imageUrl));
-        prompt = promptResponse.data;
-      } else if (args.length > 0) {
-        const argParts = args.join(" ").split("|");
-        prompt = argParts[0].trim();
-        if (argParts.length > 1) {
-          style = parseInt(argParts[1].trim());
-        }
-      } else {
-        return message.reply("❌");
-      }
-
-      // Check for bad words in the prompt
+      // Check for bad words in the prompt (if needed)
       if (containsBadWords(prompt)) {
         return message.reply("❌ | Your prompt contains inappropriate language.");
       }
 
-      const sdxlResponse = await axios.get(sdxlApiUrl, {
+      // Generate a random model ID between 1 and 56
+      const model_id = Math.floor(Math.random() * 56) + 1;
+
+      const apiResponse = await axios.get(baseUrl, {
         params: {
           prompt: prompt,
-          style: style 
+          model: model_id,
+          key: apiKey
         }
       });
 
-      if (sdxlResponse.data.status === "success") {
-        const imageUrl = sdxlResponse.data.url;
-        const imagePath = path.join(__dirname, "cache", `${Date.now()}_generated_image.png`);
+      if (apiResponse.data.transformedImageUrl) {
+        const imageUrl = apiResponse.data.transformedImageUrl;
+        const imagePath = path.join(__dirname, "cache", `prodia.png`);
         const imageResponse = await axios.get(imageUrl, { responseType: "stream" });
         const imageStream = imageResponse.data.pipe(fs.createWriteStream(imagePath));
-        imageStream.on("finish", () => {
-          const stream = fs.createReadStream(imagePath);
-          message.reply({
-            body: "",
-            attachment: stream
-          });
+        
+        // Wait for image download to finish
+        await new Promise((resolve, reject) => {
+          imageStream.on("finish", resolve);
+          imageStream.on("error", reject);
+        });
+
+        // Send the image as an attachment
+        const stream = fs.createReadStream(imagePath);
+        await message.reply({
+          body: "",
+          attachment: stream
+        });
+
+        // Delete the saved photo after sending
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error("Error deleting image:", err);
+          }
         });
       } else {
-        throw new Error("Image generation failed");
+        throw new Error("Image URL not found.");
       }
     } catch (error) {
       console.error("Error:", error);
-      message.reply("❌ | An error occurred. Please try again later.");
+      message.reply("❌ | An error occurred.");
     }
   }
 };
