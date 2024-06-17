@@ -13,7 +13,7 @@ module.exports = {
   onStart: async function ({ api, args, event }) {
     try {
       if (args.length === 0) {
-        return api.sendMessage("Use '{pn} create' to generate a temporary email or '{pn} inbox (email)' to retrieve inbox messages.", event.threadID, event.messageID);
+        return api.sendMessage("Use '-tempmail create' to generate a temporary email or '-tempmail inbox (email)' to retrieve inbox messages.", event.threadID, event.messageID);
       }
 
       const command = args[0].toLowerCase();
@@ -62,7 +62,7 @@ module.exports = {
         const formattedMessages = inboxMessages.map(({ date, sender, message }) => `📅 Date: ${date}\n📧 From: ${sender}\n📩 Message: ${message}`).join('\n\n');
         return api.sendMessage(`📬 Inbox messages for ${email}:\n\n${formattedMessages}\n\nOld messages will be deleted after some time.`, event.threadID, event.messageID);
       } else {
-        return api.sendMessage(`❌ | Invalid command. Use '{pn} create' to generate a temporary email or '{pn} inbox (email)' to retrieve inbox messages.`, event.threadID, event.messageID);
+        return api.sendMessage(`❌ | Invalid command. Use '-tempmail create' to generate a temporary email or '-tempmail inbox (email)' to retrieve inbox messages.`, event.threadID, event.messageID);
       }
     } catch (error) {
       console.error(error);
