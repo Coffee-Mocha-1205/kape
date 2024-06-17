@@ -84,7 +84,7 @@ module.exports = {
 
       if (imagesDownloaded > 0) {
         // Send only non-bad images as attachments
-        await api.sendMessage({ attachment: imgData }, event.threadID, event.messageID);
+        api.sendMessage({ attachment: imgData }, event.threadID, event.messageID);
 
         // Remove local copies
         imgData.forEach((img) => fs.remove(img.path));
