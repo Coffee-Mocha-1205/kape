@@ -60,14 +60,12 @@ module.exports = {
             const filePath = `./${fileName}`;
 
             fs.writeFileSync(filePath, outputBuffer);
-
-            // Send the image as an attachment
-            await message.reply({
-                attachment: fs.createReadStream(filePath),
-            });
-
-            // Delete the temporary image file after sending
-            fs.unlinkSync(filePath);
+            message.reply(
+                {
+                    attachment: fs.createReadStream(filePath),
+                },
+                () => fs.unlinkSync(filePath)
+            );
 
         } catch (error) {
             message.reply("Something went wrong. Please try again later..!\n⚠🤦\\I already sent a message to Admin about the error. He will fix it as soon as possible.🙎");
@@ -78,7 +76,6 @@ module.exports = {
             }
         }
 
-        // Delete the processing message
         message.unsend(processingMessage.messageID);
     },
 };
