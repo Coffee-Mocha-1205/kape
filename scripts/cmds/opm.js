@@ -70,8 +70,14 @@ module.exports = {
           attachment: fs.createReadStream(filePath)
         };
 
-        api.sendMessage(message, event.threadID, null, event.messageID, () => {
-          fs.unlinkSync(filePath);
+        api.sendMessage(message, event.threadID, null, event.messageID, async () => {
+          // Delete the temporary file after sending
+          try {
+            await fs.unlink(filePath);
+            console.log(`Deleted file: ${filePath}`);
+          } catch (error) {
+            console.error(`Error deleting file: ${filePath}`, error);
+          }
         });
       });
 
