@@ -3,8 +3,11 @@ const path = require("path");
 const axios = require("axios");
 const tinyurl = require('tinyurl');
 
-// Define your list of bad words (if any)
-const badWords = ["cleavage","cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"];
+// Define your list of bad words
+const badWords = ["cleavage","cunt","sperm","cum","tounge","tit", "gay", "pussy", "dick","nude","sugar","fuck","hotdog","slut","🤭","🍼","shit","bitch","hentai","🥵","sugar","smut","naked","penis","🍑","👄","💋","bitch","hentai","sex","😋","boobs","🤤","undressed", "nude","😛","bra","dick","arse","asshole","ass","crack","fellatio","blow job","suck","hot","bikini","👙","💦","🍆","👌","🖕","😝","😜","🤪","🥴","🥺","cock","vagina","pedo","lips","69","yuck","gae","milf","prostitute","without clothe"]; // Add your bad words here
+
+// Predefined list of models (assuming these are valid model IDs)
+const models = [1, 2, 3]; // Replace with actual model IDs
 
 module.exports = {
   config: {
@@ -41,7 +44,7 @@ module.exports = {
         return message.reply("Please reply to an image or provide a valid prompt.");
       }
 
-      // Check for bad words in the prompt (if needed)
+      // Check for bad words in the prompt
       if (containsBadWords(prompt)) {
         return message.reply("❌ | Your prompt contains inappropriate language.");
       }
@@ -52,9 +55,24 @@ module.exports = {
         prompt = promptResponse.data;
       }
 
-      const promptApiUrl = `https://text2image-wine.vercel.app/kshitiz?prompt=${encodeURIComponent(prompt)}&model=1`;
-      const response = await axios.get(promptApiUrl);
-      const { task_id } = response.data;
+      // Check for bad words in the generated prompt
+      if (containsBadWords(prompt)) {
+        return message.reply("❌ | The generated prompt contains inappropriate language.");
+      }
+
+      let task_id = null;
+      for (let model of models) {
+        const promptApiUrl = `https://text2image-wine.vercel.app/kshitiz?prompt=${encodeURIComponent(prompt)}&model=${model}`;
+        const response = await axios.get(promptApiUrl);
+        if (response.data.task_id) {
+          task_id = response.data.task_id;
+          break;
+        }
+      }
+
+      if (!task_id) {
+        return message.reply("❌ | No available model could process your request. Please try again later.");
+      }
 
       const progressApiUrl = `https://progress-black.vercel.app/progress?imageid=${task_id}`;
 
@@ -110,7 +128,7 @@ module.exports = {
   }
 };
 
-// Helper function to check for bad words (if needed)
+// Helper function to check for bad words
 function containsBadWords(prompt) {
   const promptLower = prompt.toLowerCase();
   return badWords.some(badWord => promptLower.includes(badWord));
