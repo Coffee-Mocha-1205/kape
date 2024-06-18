@@ -10,7 +10,7 @@ module.exports = {
         aliases: ["rbg"],
         author: "Strawhat Luffy & kshitiz",//fixed by kshitiz 
         countDown: 20,
-        role: 2,
+        role: 0,
         category: "image",
         shortDescription: "Remove Background from Image",
         longDescription: "Remove Background from any image. Reply to an image or add an image URL to use the command.",
