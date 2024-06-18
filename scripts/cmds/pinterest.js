@@ -2,6 +2,14 @@ const axios = require("axios");
 const fs = require("fs-extra");
 const path = require("path");
 
+// Function to get base API URL for the fourth API
+const baseApiUrl = async () => {
+  const base = await axios.get(
+    `https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`
+  );
+  return base.data.api;
+};
+
 module.exports = {
   config: {
     name: "pinterest",
@@ -119,6 +127,43 @@ module.exports = {
           }
         } catch (error) {
           console.error("Error fetching images from third API:", error);
+        }
+      }
+
+      // If still no images, try the fourth API
+      if (imgData.length === 0) {
+        try {
+          const queryAndLength = keySearch.split("-");
+          const q = queryAndLength[0].trim();
+          const length = queryAndLength[1].trim();
+
+          const response = await axios.get(
+            `${await baseApiUrl()}/pinterest?search=${encodeURIComponent(q)}&limit=${encodeURIComponent(length)}`
+          );
+          const data = response.data.data;
+
+          if (Array.isArray(data) && data.length > 0) {
+            imgData = await Promise.all(data.slice(0, numberSearch).map(async (item, i) => {
+              const imgUrl = item;
+              if (!fetchedImageUrls.includes(imgUrl)) {
+                fetchedImageUrls.push(imgUrl);
+
+                try {
+                  const { data: imgBuffer } = await axios.get(imgUrl, { responseType: 'arraybuffer' });
+                  const imgPath = path.join(__dirname, 'tmp', `${i + 1}.jpg`);
+                  await fs.outputFile(imgPath, imgBuffer);
+                  return fs.createReadStream(imgPath);
+                } catch (error) {
+                  console.error(error);
+                  return null;
+                }
+              } else {
+                return null;
+              }
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching images from fourth API:", error);
         }
       }
 
